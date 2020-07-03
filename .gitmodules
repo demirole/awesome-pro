@@ -7,3 +7,6 @@
 [submodule "freedesktop"]
 	path = freedesktop
 	url = https://github.com/lcpz/awesome-freedesktop.git
+[submodule "apw"]
+	path = apw
+	url = git@github.com:mokasin/apw.git
