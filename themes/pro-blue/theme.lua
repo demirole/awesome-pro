@@ -31,6 +31,8 @@ theme.bg_systray = "#0d1217"
 theme.bat_bg_critical   = "#ff0000"
 -- theme.bg_systray = "#000000" .. 0.01 -- transparent tray fix 
 
+theme.useless_gap = 5
+
 -- Borders
 theme.border_width                              = 2
 theme.border_normal                             = "#3F3F3F"
