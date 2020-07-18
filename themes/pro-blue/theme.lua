@@ -161,6 +161,32 @@ theme.widget_netul = wibox.widget({
       widget = wibox.widget.textbox
 })
 
+-- Battery
+theme.widget_ac             = wibox.widget({
+      markup = '<span color="#2D5DAF"></span>',
+      font = theme.font,
+      widget = wibox.widget.textbox
+})
+
+theme.widget_battery        = wibox.widget({
+      markup = '<span color="#2D5DAF"></span>',
+      font = theme.font,
+      widget = wibox.widget.textbox
+})
+
+theme.widget_battery_low    = wibox.widget({
+      markup = '<span color="#2D5DAF"></span>',
+      font = theme.font,
+      widget = wibox.widget.textbox
+})
+
+theme.widget_battery_empty  = wibox.widget({
+      markup = '<span color="#2D5DAF"></span>',
+      font = theme.font,
+      widget = wibox.widget.textbox
+})
+
+
 -- APW
 theme.widget_volume = wibox.widget({
       markup = '<span color="#2D5DAF"></span>',
