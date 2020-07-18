@@ -268,7 +268,7 @@ cpu_widget.bgimage=beautiful.widget_display
 -- CPU Temp
 local temperature_icon = beautiful.widget_cpu_temperature
 local temperature = lain.widget.temp({
-      tempfile = "/sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon0/temp1_input",
+      tempfile = "/sys/devices/platform/coretemp.0/hwmon/hwmon0/temp1_input",
       settings  = function()
 	 local temp = string.format("%2.1f °C", coretemp_now)
 	 widget:set_markup(markup.font(beautiful.font, temp))
@@ -327,6 +327,58 @@ netup_widget.bgimage=beautiful.widget_display
 beautiful.weather = lain.widget.weather({
       city_id = 2657896
 })
+
+-- Battery
+local bat_icon = beautiful.widget_battery
+local bat = lain.widget.bat({
+    battery = "BAT0",
+    timeout = 1,
+    notify = "on",
+    n_perc = {5,15},
+    settings = function()
+        bat_notification_low_preset = {
+            title = "Battery low",
+            text = "Plug the cable!",
+            timeout = 15,
+            fg = beautiful.fg_normal,
+            bg = beautiful.bg_normal
+        }
+        bat_notification_critical_preset = {
+            title = "Battery exhausted",
+            text = "Shutdown imminent",
+            timeout = 15,
+            fg = beautiful.bat_fg_critical,
+            bg = beautiful.bat_bg_critical
+        }
+
+        if bat_now.status ~= "N/A" then
+            if bat_now.status == "Charging" then
+                widget:set_markup(markup.font(beautiful.font, markup.fg.color(beautiful.fg_normal, " +" .. bat_now.perc .. "%")))
+                bat_icon = beautiful.widget_ac
+            elseif bat_now.status == "Full" then
+                widget:set_markup(markup.font(beautiful.font, markup.fg.color(beautiful.fg_normal, " ~" .. bat_now.perc .. "%")))
+                bat_icon = beautiful.widget_battery
+            elseif tonumber(bat_now.perc) <= 35 then
+                bat_icon:set_image(beautiful.widget_battery_empty)
+                widget:set_markup(markup.font(beautiful.font, markup.fg.color(beautiful.fg_normal, " -" .. bat_now.perc .. "%")))
+            elseif tonumber(bat_now.perc) <= 80 then
+                bat_icon = beautiful.widget_battery_low
+                widget:set_markup(markup.font(beautiful.font, markup.fg.color(beautiful.fg_normal, " -" .. bat_now.perc .. "%")))
+            elseif tonumber(bat_now.perc) <= 99 then
+                bat_icon = beautiful.widget_battery
+                widget:set_markup(markup.font(beautiful.font, markup.fg.color(beautiful.fg_normal, " -" .. bat_now.perc .. "%")))
+            else
+                bat_icon = beautiful.widget_battery
+                widget:set_markup(markup.font(beautiful.font, markup.fg.color(beautiful.fg_normal, " -" .. bat_now.perc .. "%")))
+            end
+        else
+            widget:set_markup(markup.font(beautiful.font, markup.fg.color(beautiful.fg_normal, " AC ")))
+            bat_icon = beautiful.widget_ac
+        end
+    end
+})
+local bat_widget = wibox.container.background(bat.widget)
+bat_widget.bgimage=beautiful.widget_display
 
 function connect(s)
   s.quake = lain.util.quake({ app = awful.util.terminal })
@@ -421,6 +473,13 @@ function connect(s)
           widget_display_c,
           netup_icon,
           netup_widget,
+          widget_display_r,
+          spr5px,
+	  -- Battery widget
+          spr,
+          bat_icon,
+          widget_display_l,
+          bat_widget,
           widget_display_r,
           spr5px,
           -- Clock
@@ -636,6 +695,16 @@ globalkeys = awful.util.table.join(
     	  {description = "show weather", group = "widgets"}
     ),
 
+    -- Brightness
+    awful.key({ }, "XF86MonBrightnessUp",
+       function () awful.util.spawn("xbacklight -inc 10") end,
+       {description = "+10%", group = "hotkeys"}
+    ),
+    awful.key({ }, "XF86MonBrightnessDown",
+       function () awful.util.spawn("xbacklight -dec 10") end,
+       {description = "-10%", group = "hotkeys"}
+    ),
+    
     -- APW volume control
     awful.key({ }, "XF86AudioRaiseVolume",  APW.Up),
     awful.key({ }, "XF86AudioLowerVolume",  APW.Down),
