@@ -443,8 +443,8 @@ awful.screen.connect_for_each_screen(function(s) connect(s) end)
 -- Menu
 local powermenu = {
    { "Suspend",   loginctl .. " suspend",       beautiful.icon_path .. "system-suspend.png" },
-   { "Restart",   loginctl .. " reboot now",    beautiful.icon_path .. "system-restart.png" },
-   { "Shutdown",  loginctl .. " poweroff now ", beautiful.icon_path .. "gnome-shutdown.png" }
+   { "Restart",   loginctl .. " reboot",    beautiful.icon_path .. "system-restart.png" },
+   { "Shutdown",  loginctl .. " poweroff", beautiful.icon_path .. "gnome-shutdown.png" }
 }
 
 awful.util.mymainmenu = freedesktop.menu.build({
